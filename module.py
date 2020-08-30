@@ -131,8 +131,7 @@ class FFN(nn.Module):
         # FFN Network
         x = input_.transpose(1, 2) 
         x = self.w_2(t.relu(self.w_1(x)))
-        print(x.size())
-        x = x.transpose(1, 2) 
+        x = x.transpose(1, 2)
 
 
         # residual connection

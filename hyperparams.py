@@ -13,6 +13,10 @@ frame_length = 0.05  # seconds
 hop_length = int(sr*frame_shift)  # samples.
 win_length = int(sr*frame_length)  # samples.
 preemphasis = 0.97
+fmin = 70
+fmax = 8000
+max_db = 100
+ref_db = 20
 
 # num_freq = 1024
 # frame_length_ms = 50.
@@ -35,9 +39,7 @@ n_decoder_heads = 2
 decoder_conv1d_kernel = 9
 decoder_conv1d_filter_size = 1024
 
-max_db = 100
-ref_db = 20
-    
+
 n_iter = 60
 # power = 1.5
 outputs_per_step = 1

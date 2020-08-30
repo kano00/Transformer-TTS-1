@@ -15,8 +15,9 @@ def main():
 
     dataset = get_dataset()
     global_step = 0
+    sum_loss = 0
     
-    # m = nn.DataParallel(Model().cuda())
+    # m = nn.DataParallel(Model().cuda()) # TODO:dataparalle
     m = Model().cuda()
 
     m.train()
@@ -103,6 +104,9 @@ def main():
                 t.save({'model':m.state_dict(),
                                  'optimizer':optimizer.state_dict()},
                                 os.path.join(hp.checkpoint_path,'checkpoint_transformer_%d.pth.tar' % global_step))
+            sum_loss += loss.item()
+
+        print(f'epoch:{epoch}, sum_loss: {sum_loss / (i + 1)}')
 
             
             
