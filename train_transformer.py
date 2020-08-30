@@ -16,7 +16,8 @@ def main():
     dataset = get_dataset()
     global_step = 0
     
-    m = nn.DataParallel(Model().cuda())
+    # m = nn.DataParallel(Model().cuda())
+    m = Model().cuda()
 
     m.train()
     optimizer = t.optim.Adam(m.parameters(), lr=hp.lr)
@@ -58,8 +59,8 @@ def main():
                 }, global_step)
                 
             writer.add_scalars('alphas',{
-                    'encoder_alpha':m.module.encoder.alpha.data,
-                    'decoder_alpha':m.module.decoder.alpha.data,
+                    'encoder_alpha':m.encoder.alpha.data,
+                    'decoder_alpha':m.decoder.alpha.data,
                 }, global_step)
             
             
