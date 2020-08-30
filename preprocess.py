@@ -31,7 +31,7 @@ class LJDatasets(Dataset):
         return len(self.landmarks_frame)
 
     def __getitem__(self, idx):
-        wav_name = os.path.join(self.root_dir, self.landmarks_frame.ix[idx, 0]) + '.wav'
+        wav_name = os.path.join(self.root_dir, self.landmarks_frame.iloc[idx, 0]) + '.wav'
         text = self.landmarks_frame.ix[idx, 1]
 
         text = np.asarray(text_to_sequence(text, [hp.cleaners]), dtype=np.int32)
