@@ -18,8 +18,9 @@ class Encoder(nn.Module):
                                                     freeze=True)
         self.pos_dropout = nn.Dropout(p=0.1)
         self.encoder_prenet = EncoderPrenet(embedding_size, num_hidden)
-        self.layers = clones(Attention(num_hidden), 3)
-        self.ffns = clones(FFN(num_hidden), 3)
+        self.layers = clones(Attention(num_hidden, hp.n_encoder_attention_heads), hp.n_encoder_layers)
+        self.ffns = clones(FFN(num_hidden=num_hidden, filter_size=hp.encoder_conv1d_filter_size,
+                               kernel_size=hp.encoder_conv1d_kernel), hp.n_encoder_layers)
 
     def forward(self, x, pos):
 
@@ -67,9 +68,10 @@ class MelDecoder(nn.Module):
         self.decoder_prenet = Prenet(hp.num_mels, num_hidden * 2, num_hidden, p=0.2)
         self.norm = Linear(num_hidden, num_hidden)
 
-        self.selfattn_layers = clones(Attention(num_hidden), 3)
-        self.dotattn_layers = clones(Attention(num_hidden), 3)
-        self.ffns = clones(FFN(num_hidden), 3)
+        self.selfattn_layers = clones(Attention(num_hidden, hp.n_decoder_heads), hp.n_decoder_layers)
+        self.dotattn_layers = clones(Attention(num_hidden, hp.n_decoder_heads), hp.n_decoder_layers)
+        self.ffns = clones(FFN(num_hidden, filter_size=hp.decoder_conv1d_filter_size,
+                               kernel_size=hp.decoder_conv1d_kernel), hp.n_decoder_layers)
         self.mel_linear = Linear(num_hidden, hp.num_mels * hp.outputs_per_step)
         self.stop_linear = Linear(num_hidden, 1, w_init='sigmoid')
 
@@ -171,3 +173,8 @@ class ModelPostNet(nn.Module):
         mag_pred = self.post_projection(mel).transpose(1, 2)
 
         return mag_pred
+
+
+if __name__ == '__main__':
+    m = Model()
+    print(m)

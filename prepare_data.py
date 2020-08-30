@@ -20,13 +20,13 @@ class PrepareDataset(Dataset):
         self.root_dir = root_dir
 
     def load_wav(self, filename):
-        return librosa.load(filename, sr=hp.sample_rate)
+        return librosa.load(filename, sr=hp.sr)
 
     def __len__(self):
         return len(self.landmarks_frame)
 
     def __getitem__(self, idx):
-        wav_name = os.path.join(self.root_dir, self.landmarks_frame.ix[idx, 0]) + '.wav'
+        wav_name = os.path.join(self.root_dir, self.landmarks_frame.iloc[idx, 0]) + '.wav'
         mel, mag = get_spectrograms(wav_name)
         
         np.save(wav_name[:-4] + '.pt', mel)

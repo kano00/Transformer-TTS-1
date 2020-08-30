@@ -100,13 +100,13 @@ class EncoderPrenet(nn.Module):
         self.projection = Linear(num_hidden, num_hidden)
 
     def forward(self, input_):
-        input_ = self.embed(input_) 
-        input_ = input_.transpose(1, 2) 
-        input_ = self.dropout1(t.relu(self.batch_norm1(self.conv1(input_)))) 
-        input_ = self.dropout2(t.relu(self.batch_norm2(self.conv2(input_)))) 
+        input_ = self.embed(input_)
+        input_ = input_.transpose(1, 2)
+        input_ = self.dropout1(t.relu(self.batch_norm1(self.conv1(input_))))
+        input_ = self.dropout2(t.relu(self.batch_norm2(self.conv2(input_))))
         input_ = self.dropout3(t.relu(self.batch_norm3(self.conv3(input_)))) 
-        input_ = input_.transpose(1, 2) 
-        input_ = self.projection(input_) 
+        input_ = input_.transpose(1, 2)
+        input_ = self.projection(input_)
 
         return input_
 
@@ -116,20 +116,22 @@ class FFN(nn.Module):
     Positionwise Feed-Forward Network
     """
     
-    def __init__(self, num_hidden):
+    def __init__(self, num_hidden, filter_size, kernel_size):
         """
         :param num_hidden: dimension of hidden 
         """
         super(FFN, self).__init__()
-        self.w_1 = Conv(num_hidden, num_hidden * 4, kernel_size=1, w_init='relu')
-        self.w_2 = Conv(num_hidden * 4, num_hidden, kernel_size=1)
+        self.w_1 = Conv(num_hidden, filter_size, kernel_size=kernel_size,
+                        padding = int(np.floor(kernel_size / 2)), w_init='relu')
+        self.w_2 = Conv(filter_size, num_hidden, kernel_size=1)
         self.dropout = nn.Dropout(p=0.1)
         self.layer_norm = nn.LayerNorm(num_hidden)
 
     def forward(self, input_):
         # FFN Network
         x = input_.transpose(1, 2) 
-        x = self.w_2(t.relu(self.w_1(x))) 
+        x = self.w_2(t.relu(self.w_1(x)))
+        print(x.size())
         x = x.transpose(1, 2) 
 
 
@@ -143,6 +145,10 @@ class FFN(nn.Module):
         x = self.layer_norm(x) 
 
         return x
+
+
+if __name__ == '__main__':
+    print(a.size())
 
 
 class PostConvNet(nn.Module):
