@@ -30,6 +30,7 @@ def main():
 
         dataloader = DataLoader(dataset, batch_size=hp.batch_size, shuffle=True, collate_fn=collate_fn_transformer, drop_last=True, num_workers=16)
         pbar = tqdm(dataloader)
+        sum_loss = 0
         for i, data in enumerate(pbar):
             pbar.set_description("Processing at epoch %d"%epoch)
             global_step += 1
