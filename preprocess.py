@@ -11,30 +11,31 @@ import torch as t
 import math
 
 
-class LJDatasets(Dataset):
-    """LJSpeech dataset."""
+class JSUTDatasets(Dataset):
 
-    def __init__(self, csv_file, root_dir):
+    def __init__(self, txt_file, root_dir):
         """
         Args:
             csv_file (string): Path to the csv file with annotations.
             root_dir (string): Directory with all the wavs.
 
         """
-        self.landmarks_frame = pd.read_csv(csv_file, sep='|', header=None)
+        with open(txt_file) as f:
+            txt = f.read().splitlines()
+            self.landmarks_frame = [i.split(':') for i in txt]
         self.root_dir = root_dir
 
     def load_wav(self, filename):
-        return librosa.load(filename, sr=hp.sample_rate)
+        return librosa.load(filename, sr=hp.sr)
 
     def __len__(self):
         return len(self.landmarks_frame)
 
     def __getitem__(self, idx):
-        wav_name = os.path.join(self.root_dir, self.landmarks_frame.iloc[idx, 0]) + '.wav'
-        text = self.landmarks_frame.iloc[idx, 1]
+        wav_name = os.path.join(self.root_dir, self.landmarks_frame[idx][0] + '.wav')
+        text = self.landmarks_frame[idx][1]
 
-        text = np.asarray(text_to_sequence(text, [hp.cleaners]), dtype=np.int32)
+        text = np.asarray(text, dtype=np.int32)
         mel = np.load(wav_name[:-4] + '.pt.npy')
         mel_input = np.concatenate([np.zeros([1,hp.num_mels], np.float32), mel[:-1,:]], axis=0)
         text_length = len(text)
@@ -44,7 +45,8 @@ class LJDatasets(Dataset):
         sample = {'text': text, 'mel': mel, 'text_length':text_length, 'mel_input':mel_input, 'pos_mel':pos_mel, 'pos_text':pos_text}
 
         return sample
-    
+
+
 class PostDatasets(Dataset):
     """LJSpeech dataset."""
 
@@ -139,7 +141,7 @@ def get_param_size(model):
     return params
 
 def get_dataset():
-    return LJDatasets(os.path.join(hp.data_path,'metadata.csv'), os.path.join(hp.data_path,'wavs'))
+    return JSUTDatasets(os.path.join(hp.data_path,'metadata.csv'), os.path.join(hp.data_path,'wavs'))
 
 def get_post_dataset():
     return PostDatasets(os.path.join(hp.data_path,'metadata.csv'), os.path.join(hp.data_path,'wavs'))

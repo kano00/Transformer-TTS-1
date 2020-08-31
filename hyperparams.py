@@ -1,12 +1,12 @@
 # path
-data_path = './data/LJSpeech-1.1'
+data_path = './data/jsut-1.1'
 checkpoint_path = './checkpoint'
 sample_path = './samples'
 
 # Audio
 num_mels = 80
 n_mels = 80 # Number of Mel banks to generate
-sr = 22050
+sr = 24000
 n_fft = 2048
 frame_shift = 0.0125  # seconds
 frame_length = 0.05  # seconds
@@ -50,6 +50,4 @@ epochs = 10000
 lr = 0.001
 save_step = 2000
 image_step = 500
-
-cleaners='english_cleaners'
 
