@@ -12,9 +12,9 @@ frame_shift = 0.0125  # seconds
 frame_length = 0.05  # seconds
 hop_length = int(sr*frame_shift)  # samples.
 win_length = int(sr*frame_length)  # samples.
-preemphasis = 0.97
 fmin = 70
 fmax = 8000
+preemphasis = 0.97
 max_db = 100
 ref_db = 20
 

@@ -28,7 +28,7 @@ def synthesis(text, args):
     text = np.asarray(text_to_sequence(text, [hp.cleaners]))
     text = t.LongTensor(text).unsqueeze(0)
     text = text.cuda()
-    mel_input = t.zeros([1,1, 80]).cuda()
+    mel_input = t.zeros([1,1, 80]).cuda() # TODO:これプラス、メルをくっつける
     pos_text = t.arange(1, text.size(1)+1).unsqueeze(0)
     pos_text = pos_text.cuda()
 
