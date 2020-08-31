@@ -33,7 +33,7 @@ class JSUTDatasets(Dataset):
 
     def __getitem__(self, idx):
         wav_name = os.path.join(self.root_dir, self.landmarks_frame[idx][0] + '.wav')
-        text = self.landmarks_frame[idx][1]
+        text = self.landmarks_frame[idx][1].split()
 
         text = np.asarray(text, dtype=np.int32)
         mel = np.load(wav_name[:-4] + '.pt.npy')
@@ -141,7 +141,7 @@ def get_param_size(model):
     return params
 
 def get_dataset():
-    return JSUTDatasets(os.path.join(hp.data_path,'metadata.csv'), os.path.join(hp.data_path,'wavs'))
+    return JSUTDatasets(os.path.join(hp.data_path,'phoneme_id_dict.txt'), os.path.join(hp.data_path,'wavs'))
 
 def get_post_dataset():
     return PostDatasets(os.path.join(hp.data_path,'metadata.csv'), os.path.join(hp.data_path,'wavs'))

@@ -41,7 +41,7 @@ class PrepareJSUTDataset(Dataset):
 
 
 if __name__ == '__main__':
-    dataset = PrepareJSUTDataset(os.path.join(hp.data_path, 'phoneme_dict.txt'), os.path.join(hp.data_path, 'wavs'))
+    dataset = PrepareJSUTDataset(os.path.join(hp.data_path, 'phoneme_id_dict.txt'), os.path.join(hp.data_path, 'wavs'))
     dataloader = DataLoader(dataset, batch_size=1, drop_last=False, num_workers=8)
     from tqdm import tqdm
 
