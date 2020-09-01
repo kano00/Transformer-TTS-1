@@ -146,7 +146,8 @@ def get_dataset():
     return JSUTDatasets(os.path.join(hp.data_path,'phoneme_id_dict.txt'), os.path.join(hp.data_path,'wavs'))
 
 def get_post_dataset():
-    return PostDatasets(os.path.join(hp.data_path,'metadata.csv'), os.path.join(hp.data_path,'wavs'))
+    return PostDatasets(os.path.join(hp.data_path,'phoneme_id_dict.txt'), os.path.join(hp.data_path,'wavs'))
+
 
 def _pad_mel(inputs):
     _pad = 0
