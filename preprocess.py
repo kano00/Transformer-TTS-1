@@ -50,21 +50,23 @@ class JSUTDatasets(Dataset):
 class PostDatasets(Dataset):
     """LJSpeech dataset."""
 
-    def __init__(self, csv_file, root_dir):
+    def __init__(self, txt_file, root_dir):
         """
         Args:
             csv_file (string): Path to the csv file with annotations.
             root_dir (string): Directory with all the wavs.
 
         """
-        self.landmarks_frame = pd.read_csv(csv_file, sep='|', header=None)
+        with open(txt_file) as f:
+            txt = f.read().splitlines()
+            self.landmarks_frame = [i.split(':') for i in txt]
         self.root_dir = root_dir
 
     def __len__(self):
         return len(self.landmarks_frame)
 
     def __getitem__(self, idx):
-        wav_name = os.path.join(self.root_dir, self.landmarks_frame.iloc[idx, 0]) + '.wav'
+        wav_name = os.path.join(self.root_dir, self.landmarks_frame[idx][0] + '.wav')
         mel = np.load(wav_name[:-4] + '.pt.npy')
         mag = np.load(wav_name[:-4] + '.mag.npy')
         sample = {'mel':mel, 'mag':mag}
